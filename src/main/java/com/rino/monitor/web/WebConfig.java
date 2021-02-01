@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
 //                .allowedHeaders("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*") // 注意： 这里需要设置为*，在Session拦截器中需要设置为特定的headers
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*");
     }
 }
