@@ -1,6 +1,7 @@
 package com.rino.monitor.api;
 
 import com.rino.monitor.bean.ApiResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import oshi.SystemInfo;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @author zip
  */
 @RestController
+@Slf4j
 public class MonitorAPI {
     /**
      * 系统信息
@@ -56,13 +58,10 @@ public class MonitorAPI {
         long total = 0, free = 0;
         for (OSFileStore fs : fsArray) {
             String options = fs.getOptions();
-            if (options != null) {
-                String[] optArr = options.split(",");
-                int index = Arrays.binarySearch(optArr, "rootfs");
-                if (index >= 0) {
-                    total += fs.getTotalSpace();
-                    free += fs.getFreeSpace();
-                }
+            boolean mainFlag = "rootfs".equalsIgnoreCase(fs.getName()) || (options != null && options.indexOf("rootfs") != -1);
+            if (mainFlag) {
+                total += fs.getTotalSpace();
+                free += fs.getFreeSpace();
             }
         }
         Map data = new HashMap(2);
